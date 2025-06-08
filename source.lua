@@ -1,81 +1,113 @@
-local screenGui = Instance.new("ScreenGui")
-screenGui.Name = "CustomGUI"
-screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+local player = game.Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
 
--- เมนูแถบด้านบน
+local screenGui = Instance.new("ScreenGui", playerGui)
+screenGui.Name = "CustomTopBarAndSettings"
+
+-- สร้าง TopBar
 local topBar = Instance.new("Frame")
-topBar.Size = UDim2.new(0, 500, 0, 50)
-topBar.Position = UDim2.new(0.5, -250, 0, 20)
+topBar.Size = UDim2.new(0, 400, 0, 50)
+topBar.Position = UDim2.new(0.5, -200, 0, 20)
 topBar.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 topBar.BorderSizePixel = 0
+topBar.AnchorPoint = Vector2.new(0, 0)
 topBar.Parent = screenGui
+topBar.BackgroundTransparency = 0.1
 
--- ตัวอย่างไอคอนในแถบ
+-- เวลา
+local timeLabel = Instance.new("TextLabel")
+timeLabel.Size = UDim2.new(0, 60, 1, 0)
+timeLabel.Position = UDim2.new(0, 10, 0, 0)
+timeLabel.Text = "07:44"
+timeLabel.TextColor3 = Color3.new(1,1,1)
+timeLabel.TextScaled = true
+timeLabel.Font = Enum.Font.SourceSansBold
+timeLabel.BackgroundTransparency = 1
+timeLabel.Parent = topBar
+
+-- ปุ่มไอคอนสี
 local icons = {
-	{Color = Color3.fromRGB(120, 100, 255)}, -- บ้าน
-	{Color = Color3.fromRGB(100, 200, 255)}, -- คน
-	{Color = Color3.fromRGB(255, 120, 120)}, -- หนังสือ
-	{Color = Color3.fromRGB(100, 255, 120)}, -- กลุ่ม
-	{Color = Color3.fromRGB(255, 100, 100)}, -- เพลง
+	{Color = Color3.fromRGB(111, 99, 255)}, -- Home
+	{Color = Color3.fromRGB(99, 201, 255)}, -- User
+	{Color = Color3.fromRGB(255, 99, 99)}, -- Book
+	{Color = Color3.fromRGB(99, 255, 140)}, -- Friends
+	{Color = Color3.fromRGB(255, 99, 130)}, -- Music
 }
 
-for i, iconData in ipairs(icons) do
+for i, data in ipairs(icons) do
 	local icon = Instance.new("TextButton")
-	icon.Size = UDim2.new(0, 40, 0, 40)
-	icon.Position = UDim2.new(0, 60 * (i - 1), 0, 5)
-	icon.BackgroundColor3 = iconData.Color
+	icon.Size = UDim2.new(0, 30, 0, 30)
+	icon.Position = UDim2.new(0, 80 + (i - 1) * 35, 0.1, 0)
+	icon.BackgroundColor3 = data.Color
 	icon.Text = ""
+	icon.BorderSizePixel = 0
 	icon.Parent = topBar
 end
 
--- ปุ่มรูปเฟือง
-local settingsBtn = Instance.new("TextButton")
-settingsBtn.Size = UDim2.new(0, 40, 0, 40)
-settingsBtn.Position = UDim2.new(1, -50, 0, 5)
-settingsBtn.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
-settingsBtn.Text = "⚙"
-settingsBtn.TextColor3 = Color3.new(1, 1, 1)
-settingsBtn.Parent = topBar
+-- ปุ่ม Settings (Gear)
+local gearBtn = Instance.new("TextButton")
+gearBtn.Size = UDim2.new(0, 40, 0, 40)
+gearBtn.Position = UDim2.new(1, -50, 0, 5)
+gearBtn.Text = "⚙️"
+gearBtn.TextScaled = true
+gearBtn.BackgroundColor3 = Color3.fromRGB(60,60,60)
+gearBtn.TextColor3 = Color3.new(1,1,1)
+gearBtn.Parent = topBar
+gearBtn.BorderSizePixel = 0
 
--- หน้าต่าง Settings
-local settingsFrame = Instance.new("Frame")
-settingsFrame.Size = UDim2.new(0, 400, 0, 250)
-settingsFrame.Position = UDim2.new(0.5, -200, 0.5, -125)
-settingsFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
-settingsFrame.Visible = false
-settingsFrame.Parent = screenGui
+-- Settings Panel
+local settingsPanel = Instance.new("Frame")
+settingsPanel.Size = UDim2.new(0, 500, 0, 300)
+settingsPanel.Position = UDim2.new(0.5, -250, 0.5, -150)
+settingsPanel.BackgroundColor3 = Color3.fromRGB(15,15,15)
+settingsPanel.BorderSizePixel = 0
+settingsPanel.Visible = false
+settingsPanel.Parent = screenGui
 
-local titleLabel = Instance.new("TextLabel")
-titleLabel.Size = UDim2.new(1, 0, 0, 30)
-titleLabel.BackgroundTransparency = 1
-titleLabel.Text = "Settings"
-titleLabel.TextColor3 = Color3.new(1, 1, 1)
-titleLabel.TextScaled = true
-titleLabel.Font = Enum.Font.SourceSansBold
-titleLabel.Parent = settingsFrame
+-- Settings Title
+local settingsTitle = Instance.new("TextLabel")
+settingsTitle.Size = UDim2.new(1, 0, 0, 40)
+settingsTitle.Text = "Settings"
+settingsTitle.TextColor3 = Color3.new(1,1,1)
+settingsTitle.Font = Enum.Font.SourceSansBold
+settingsTitle.TextScaled = true
+settingsTitle.BackgroundTransparency = 1
+settingsTitle.Parent = settingsPanel
 
--- ปุ่มหมวดใน Settings
-local categories = {
-	{"GENERAL", Color3.fromRGB(50, 100, 255)},
-	{"KEYBINDS", Color3.fromRGB(50, 200, 100)},
-	{"PERFORMANCE", Color3.fromRGB(255, 150, 50)},
+-- คำอธิบาย
+local settingsDesc = Instance.new("TextLabel")
+settingsDesc.Size = UDim2.new(1, -20, 0, 30)
+settingsDesc.Position = UDim2.new(0, 10, 0, 40)
+settingsDesc.Text = "Adjust your preferences, set new keybinds, test out new features and more."
+settingsDesc.TextColor3 = Color3.fromRGB(200, 200, 200)
+settingsDesc.Font = Enum.Font.SourceSans
+settingsDesc.TextScaled = true
+settingsDesc.BackgroundTransparency = 1
+settingsDesc.TextWrapped = true
+settingsDesc.Parent = settingsPanel
+
+-- ปุ่มใน Settings
+local buttons = {
+	{"GENERAL", Color3.fromRGB(0, 120, 255)},
+	{"KEYBINDS", Color3.fromRGB(0, 180, 90)},
+	{"PERFORMANCE", Color3.fromRGB(255, 140, 50)},
 	{"DETECTIONS", Color3.fromRGB(255, 50, 50)},
-	{"LOGGING", Color3.fromRGB(255, 200, 50)},
+	{"LOGGING", Color3.fromRGB(255, 200, 0)},
 }
 
-for i, cat in ipairs(categories) do
-	local button = Instance.new("TextButton")
-	button.Size = UDim2.new(0.45, 0, 0, 40)
-	button.Position = UDim2.new((i - 1) % 2 * 0.5 + 0.025, 0, 0.15 + math.floor((i - 1) / 2) * 0.2, 0)
-	button.BackgroundColor3 = cat[2]
-	button.Text = cat[1]
-	button.TextColor3 = Color3.new(1, 1, 1)
-	button.Font = Enum.Font.SourceSansBold
-	button.TextScaled = true
-	button.Parent = settingsFrame
+for i, data in ipairs(buttons) do
+	local btn = Instance.new("TextButton")
+	btn.Size = UDim2.new(0.3, 0, 0, 60)
+	btn.Position = UDim2.new(0.05 + ((i - 1) % 2) * 0.5, 0, 0.35 + math.floor((i - 1) / 2) * 0.25, 0)
+	btn.BackgroundColor3 = data[2]
+	btn.Text = data[1]
+	btn.TextScaled = true
+	btn.Font = Enum.Font.SourceSansBold
+	btn.TextColor3 = Color3.new(1,1,1)
+	btn.Parent = settingsPanel
 end
 
--- กดเปิด Settings
-settingsBtn.MouseButton1Click:Connect(function()
-	settingsFrame.Visible = not settingsFrame.Visible
+-- toggle ปุ่ม settings
+gearBtn.MouseButton1Click:Connect(function()
+	settingsPanel.Visible = not settingsPanel.Visible
 end)
